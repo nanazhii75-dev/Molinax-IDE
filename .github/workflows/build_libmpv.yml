@@ -1,0 +1,59 @@
+name: Build libmpv.so
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            abi: arm64-v8a
+          - arch: armv7l
+            abi: armeabi-v7a
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y autoconf pkg-config libtool ninja-build \
+            unzip wget meson gperf default-jre-headless
+
+      - name: Cache SDK/NDK
+        uses: actions/cache@v4
+        with:
+          path: native-build/sdk
+          key: ndk-r29-${{ hashFiles('native-build/include/depinfo.sh') }}
+
+      - name: Cache dependency sources
+        uses: actions/cache@v4
+        with:
+          path: native-build/deps
+          key: mpv-deps-src-${{ hashFiles('native-build/include/depinfo.sh') }}
+
+      - name: Cache built prefix
+        uses: actions/cache@v4
+        with:
+          path: native-build/prefix/${{ matrix.arch }}
+          key: mpv-prefix-${{ matrix.arch }}-${{ hashFiles('native-build/include/depinfo.sh') }}
+
+      - name: Download SDK/NDK + dependency sources
+        working-directory: native-build
+        env:
+          IN_CI: "1"
+        run: ./download.sh
+
+      - name: Build libmpv for ${{ matrix.arch }}
+        working-directory: native-build
+        env:
+          IN_CI: "1"
+        run: ./buildall.sh --arch ${{ matrix.arch }} mpv
+
+      - name: Upload libmpv.so
+        uses: actions/upload-artifact@v4
+        with:
+          name: libmpv-${{ matrix.abi }}
+          path: native-build/prefix/${{ matrix.arch }}/lib/libmpv.so
