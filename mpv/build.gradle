@@ -10,6 +10,9 @@ android {
         targetSdk 36
 
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField "String", "VERSION_NAME", "\"2026-08-11-release\""
+        buildConfigField "int", "VERSION_CODE", "47"
     }
 
     flavorDimensions "default"
