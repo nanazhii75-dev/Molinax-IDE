@@ -21,7 +21,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y autoconf pkg-config libtool ninja-build \
-            unzip wget meson gperf default-jre-headless
+            unzip wget gperf default-jre-headless
+          pip install --user --upgrade meson
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify meson version
+        run: meson --version
 
       - name: Cache SDK/NDK
         uses: actions/cache@v4
