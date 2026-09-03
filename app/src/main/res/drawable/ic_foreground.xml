@@ -1,28 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:height="108dp"
     android:width="108dp"
+    android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Keep in sync with non-adaptive ic_launcher.xml -->
+    <!-- Monitor bezel -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,38
-                          h6
-                          l12,16
-                          l-12,16
-                          h-6
-                          l12,-16
-                          "
-        />
+        android:pathData="M29,24 L79,24 A5,5 0 0 1 84,29 L84,57 A5,5 0 0 1 79,62 L29,62 A5,5 0 0 1 24,57 L24,29 A5,5 0 0 1 29,24 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:fillColor="#00000000"/>
 
+    <!-- Stand neck -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M56,66
-                          h18
-                          v4
-                          h-18
-                          "
-        />
+        android:pathData="M48,62 L60,62 L64,72 L44,72 Z"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Base -->
+    <path
+        android:pathData="M36,72 L72,72 A4,4 0 0 1 72,80 L36,80 A4,4 0 0 1 36,72 Z"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- < symbol -->
+    <path
+        android:pathData="M46,33 L38,43 L46,53"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"/>
+
+    <!-- / symbol -->
+    <path
+        android:pathData="M62,33 L54,53"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+
+    <!-- > symbol -->
+    <path
+        android:pathData="M62,33 L70,43 L62,53"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"/>
 
 </vector>
