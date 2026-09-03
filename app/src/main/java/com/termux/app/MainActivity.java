@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, TermuxActivity.class));
                 return true;
             } else if (id == R.id.nav_mpv) {
-                showPlaceholder("Mpv — coming soon");
+                startActivity(new Intent(this, is.xyz.mpv.MainActivity.class));
                 return true;
             } else if (id == R.id.nav_editor) {
                 showPlaceholder("Code Editor — coming soon");
