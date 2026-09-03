@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_mpv"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/ic_nav_mpv"
         android:title="Mpv" />
     <item
         android:id="@+id/nav_editor"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_nav_editor"
         android:title="Editor" />
     <item
         android:id="@+id/nav_terminal"
-        android:icon="@android:drawable/ic_menu_send"
+        android:icon="@drawable/ic_nav_terminal"
         android:title="Terminal" />
     <item
         android:id="@+id/nav_utilities"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_nav_utilities"
         android:title="Utilities" />
 </menu>
