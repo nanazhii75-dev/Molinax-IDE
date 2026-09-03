@@ -25,7 +25,7 @@
     <!-- < symbol -->
     <path
         android:pathData="M46,33 L38,43 L46,53"
-        android:strokeColor="#FFFFFF"
+        android:strokeColor="#00E676"
         android:strokeWidth="5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
@@ -34,7 +34,7 @@
     <!-- / symbol -->
     <path
         android:pathData="M62,33 L54,53"
-        android:strokeColor="#FFFFFF"
+        android:strokeColor="#00E676"
         android:strokeWidth="5"
         android:strokeLineCap="round"
         android:fillColor="#00000000"/>
@@ -42,7 +42,7 @@
     <!-- > symbol -->
     <path
         android:pathData="M62,33 L70,43 L62,53"
-        android:strokeColor="#FFFFFF"
+        android:strokeColor="#00E676"
         android:strokeWidth="5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
