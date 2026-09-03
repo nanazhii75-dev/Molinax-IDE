@@ -29,19 +29,19 @@ jobs:
         run: meson --version
 
       - name: Cache SDK/NDK
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: native-build/sdk
           key: ndk-r29-${{ hashFiles('native-build/include/depinfo.sh') }}
 
       - name: Cache dependency sources
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: native-build/deps
           key: mpv-deps-src-${{ hashFiles('native-build/include/depinfo.sh') }}
 
       - name: Cache built prefix
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: native-build/prefix/${{ matrix.arch }}
           key: mpv-prefix-${{ matrix.arch }}-${{ hashFiles('native-build/include/depinfo.sh') }}
