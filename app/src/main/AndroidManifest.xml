@@ -39,6 +39,7 @@
 
     <application
         android:name=".app.TermuxApplication"
+        tools:replace="android:allowBackup,android:supportsRtl"
         android:allowBackup="false"
         android:banner="@drawable/banner"
         android:icon="@mipmap/ic_launcher"
