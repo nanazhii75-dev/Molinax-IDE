@@ -39,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_terminal) {
                 startActivity(new Intent(this, TermuxActivity.class));
-                return true;
+                // return false: Terminal buka Activity terpisah, contentFrame gak berubah,
+                // jadi highlight bottom nav JANGAN ikut pindah ke Terminal — biarkan tetap
+                // nunjukin tab yang isinya beneran lagi ditampilkan di contentFrame.
+                return false;
             } else if (id == R.id.nav_mpv) {
                 showMpvHome();
                 return true;
