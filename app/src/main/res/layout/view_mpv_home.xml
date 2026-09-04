@@ -26,14 +26,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Putar" />
+        android:text="Putar"
+        android:backgroundTint="#00C853"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/mpv_browse_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Buka File Browser" />
+        android:text="Buka File Browser"
+        android:backgroundTint="@color/grey_500"
+        android:textColor="@color/white" />
 
     <ProgressBar
         android:id="@+id/mpv_loading_indicator"
