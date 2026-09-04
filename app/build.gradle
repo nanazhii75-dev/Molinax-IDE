@@ -40,6 +40,7 @@ android {
         implementation project(":termux-shared")
         implementation project(":mpv")
         implementation project(":medialibrary")
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     }
 
     defaultConfig {
