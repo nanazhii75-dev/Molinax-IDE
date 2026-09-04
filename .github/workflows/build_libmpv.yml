@@ -12,8 +12,10 @@ jobs:
         include:
           - arch: arm64
             abi: arm64-v8a
+            triple: aarch64-linux-android
           - arch: armv7l
             abi: armeabi-v7a
+            triple: arm-linux-androideabi
     steps:
       - uses: actions/checkout@v4
 
@@ -58,8 +60,15 @@ jobs:
           IN_CI: "1"
         run: ./buildall.sh --arch ${{ matrix.arch }} mpv
 
-      - name: Upload libmpv.so
+      - name: Copy libc++_shared.so from NDK sysroot
+        working-directory: native-build
+        run: |
+          NDK_DIR="sdk/android-ndk-r29"
+          SYSROOT_LIB="$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/${{ matrix.triple }}"
+          cp "$SYSROOT_LIB/libc++_shared.so" "prefix/${{ matrix.arch }}/lib/"
+
+      - name: Upload native libraries (libmpv + FFmpeg deps)
         uses: actions/upload-artifact@v4
         with:
           name: libmpv-${{ matrix.abi }}
-          path: native-build/prefix/${{ matrix.arch }}/lib/libmpv.so
+          path: native-build/prefix/${{ matrix.arch }}/lib/*.so
