@@ -203,7 +203,6 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize"
             android:theme="@style/FilePickerTheme"
             android:exported="true">

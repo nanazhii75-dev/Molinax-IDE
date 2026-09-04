@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_terminal) {
-                startActivity(new Intent(this, TermuxActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                startActivity(new Intent(this, TermuxActivity.class));
                 return true;
             } else if (id == R.id.nav_mpv) {
-                startActivity(new Intent(this, is.xyz.mpv.MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                startActivity(new Intent(this, is.xyz.mpv.MainActivity.class));
                 return true;
             } else if (id == R.id.nav_editor) {
                 showPlaceholder("Code Editor — coming soon");
