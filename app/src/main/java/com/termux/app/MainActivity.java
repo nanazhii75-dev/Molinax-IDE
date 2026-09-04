@@ -1,5 +1,11 @@
 package com.termux.app;
 
+import android.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.molinax.medialibrary.YtSearchResult;
+import java.util.List;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,38 +70,68 @@ public class MainActivity extends AppCompatActivity {
         contentFrame.removeAllViews();
         View view = getLayoutInflater().inflate(R.layout.view_mpv_home, contentFrame, false);
         contentFrame.addView(view);
-
         EditText urlInput = view.findViewById(R.id.mpv_url_input);
         Button playButton = view.findViewById(R.id.mpv_play_button);
         Button browseButton = view.findViewById(R.id.mpv_browse_button);
         ProgressBar loadingIndicator = view.findViewById(R.id.mpv_loading_indicator);
-
         playButton.setOnClickListener(v -> {
-            String url = urlInput.getText().toString().trim();
-            if (TextUtils.isEmpty(url)) {
-                Toast.makeText(this, "Masukkan URL dulu", Toast.LENGTH_SHORT).show();
+            String input = urlInput.getText().toString().trim();
+            if (TextUtils.isEmpty(input)) {
+                Toast.makeText(this, "Masukkan judul atau URL dulu", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            playButton.setEnabled(false);
-            loadingIndicator.setVisibility(View.VISIBLE);
-
-            MediaLibraryBridge.INSTANCE.resolveAndSave(
-                getApplicationContext(),
-                url,
-                (title, thumbnailUrl) -> {
-                    playButton.setEnabled(true);
-                    loadingIndicator.setVisibility(View.GONE);
-                    launchMpvPlayer(url);
-                }
-            );
+            if (input.startsWith("http://") || input.startsWith("https://")) {
+                playUrl(input, playButton, loadingIndicator);
+            } else {
+                searchByTitle(input, playButton, loadingIndicator);
+            }
         });
-
         browseButton.setOnClickListener(v ->
             startActivity(new Intent(this, is.xyz.mpv.MainActivity.class))
         );
     }
-
+    private void playUrl(String url, Button playButton, ProgressBar loadingIndicator) {
+        playButton.setEnabled(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
+        MediaLibraryBridge.INSTANCE.resolveAndSave(
+            getApplicationContext(),
+            url,
+            (title, thumbnailUrl) -> {
+                playButton.setEnabled(true);
+                loadingIndicator.setVisibility(View.GONE);
+                launchMpvPlayer(url);
+            }
+        );
+    }
+    private void searchByTitle(String query, Button playButton, ProgressBar loadingIndicator) {
+        playButton.setEnabled(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
+        MediaLibraryBridge.INSTANCE.search(query, results -> {
+            playButton.setEnabled(true);
+            loadingIndicator.setVisibility(View.GONE);
+            if (results.isEmpty()) {
+                Toast.makeText(this, "Tidak ditemukan", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            showSearchResultsDialog(results, playButton, loadingIndicator);
+        });
+    }
+    private void showSearchResultsDialog(List<YtSearchResult> results, Button playButton, ProgressBar loadingIndicator) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_search_results, null);
+        RecyclerView recyclerView = dialogView.findViewById(R.id.search_results_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        AlertDialog dialog = new AlertDialog.Builder(this)
+            .setTitle("Pilih video")
+            .setView(dialogView)
+            .setNegativeButton("Batal", null)
+            .create();
+        SearchResultAdapter adapter = new SearchResultAdapter(results, result -> {
+            dialog.dismiss();
+            playUrl(result.getUrl(), playButton, loadingIndicator);
+        });
+        recyclerView.setAdapter(adapter);
+        dialog.show();
+    }
     private void launchMpvPlayer(String url) {
         Intent intent = new Intent(this, is.xyz.mpv.MPVActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
