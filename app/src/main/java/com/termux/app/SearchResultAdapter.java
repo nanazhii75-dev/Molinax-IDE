@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.molinax.medialibrary.YtSearchResult;
+import com.termux.R;
 
 import java.util.List;
 import java.util.Locale;
