@@ -39,6 +39,15 @@
         android:backgroundTint="@color/grey_500"
         android:textColor="@color/white" />
 
+    <Button
+        android:id="@+id/mpv_download_audio_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Unduh Audio"
+        android:backgroundTint="#F44336"
+        android:textColor="@color/white" />
+
     <ProgressBar
         android:id="@+id/mpv_loading_indicator"
         style="?android:attr/progressBarStyleSmall"

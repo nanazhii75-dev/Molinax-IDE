@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.molinax.medialibrary.YtSearchResult;
 import java.util.List;
+import com.molinax.medialibrary.DownloadService;
+import com.termux.shared.android.PermissionUtils;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         EditText urlInput = view.findViewById(R.id.mpv_url_input);
         Button playButton = view.findViewById(R.id.mpv_play_button);
         Button browseButton = view.findViewById(R.id.mpv_browse_button);
+        Button downloadAudioButton = view.findViewById(R.id.mpv_download_audio_button);
         ProgressBar loadingIndicator = view.findViewById(R.id.mpv_loading_indicator);
         playButton.setOnClickListener(v -> {
             String input = urlInput.getText().toString().trim();
@@ -92,6 +96,21 @@ public class MainActivity extends AppCompatActivity {
         browseButton.setOnClickListener(v ->
             startActivity(new Intent(this, is.xyz.mpv.MainActivity.class))
         );
+        downloadAudioButton.setOnClickListener(v -> {
+            String url = urlInput.getText().toString().trim();
+            if (TextUtils.isEmpty(url) || !(url.startsWith("http://") || url.startsWith("https://"))) {
+                Toast.makeText(this, "Masukkan URL video dulu (bukan judul) untuk download", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!PermissionUtils.checkAndRequestLegacyOrManageExternalStoragePermissionIfPathOnPrimaryExternalStorage(
+                    this, "/storage/emulated/0/Download/Molinax/", 1001, true)) {
+                return;
+            }
+            Intent serviceIntent = new Intent(this, DownloadService.class);
+            serviceIntent.putExtra(DownloadService.EXTRA_URL, url);
+            ContextCompat.startForegroundService(this, serviceIntent);
+            Toast.makeText(this, "Download dimulai, cek notifikasi untuk progress", Toast.LENGTH_SHORT).show();
+        });
     }
     private void playUrl(String url, Button playButton, ProgressBar loadingIndicator) {
         playButton.setEnabled(false);

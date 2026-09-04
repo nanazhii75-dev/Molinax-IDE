@@ -205,6 +205,10 @@
             android:exported="false" />
 
         <service
+            android:name="com.molinax.medialibrary.DownloadService"
+            android:exported="false" />
+
+        <service
             android:name=".app.RunCommandService"
             android:exported="true"
             android:permission="${TERMUX_PACKAGE_NAME}.permission.RUN_COMMAND">
