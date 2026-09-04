@@ -60,6 +60,18 @@ jobs:
           IN_CI: "1"
         run: ./buildall.sh --arch ${{ matrix.arch }} mpv
 
+      - name: Build libplayer.so (JNI bridge) via ndk-build
+        run: |
+          NDK_DIR="native-build/sdk/android-ndk-r29"
+          export PATH="$NDK_DIR:$PATH"
+          if [ "${{ matrix.arch }}" == "armv7l" ]; then
+            export PREFIX32="$(realpath native-build/prefix/armv7l)"
+          else
+            export PREFIX64="$(realpath native-build/prefix/arm64)"
+          fi
+          ndk-build -C mpv/src/main -j$(nproc)
+          cp "mpv/src/main/libs/${{ matrix.abi }}/libplayer.so" "native-build/prefix/${{ matrix.arch }}/lib/"
+
       - name: Copy libc++_shared.so from NDK sysroot
         working-directory: native-build
         run: |
@@ -67,7 +79,7 @@ jobs:
           SYSROOT_LIB="$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/${{ matrix.triple }}"
           cp "$SYSROOT_LIB/libc++_shared.so" "prefix/${{ matrix.arch }}/lib/"
 
-      - name: Upload native libraries (libmpv + FFmpeg deps)
+      - name: Upload native libraries (libmpv + FFmpeg deps + libplayer)
         uses: actions/upload-artifact@v4
         with:
           name: libmpv-${{ matrix.abi }}
