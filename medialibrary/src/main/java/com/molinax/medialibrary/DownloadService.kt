@@ -24,7 +24,7 @@ class DownloadService : Service() {
     companion object {
         const val EXTRA_URL = "extra_url"
         const val EXTRA_PRESET = "extra_preset"
-        private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
+        private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp-fb"
         private const val FFMPEG_PATH = "/data/data/com.termux/files/usr/bin/ffmpeg"
         private const val CHANNEL_ID = "molinax_download_channel"
         private const val NOTIF_ID = 4242

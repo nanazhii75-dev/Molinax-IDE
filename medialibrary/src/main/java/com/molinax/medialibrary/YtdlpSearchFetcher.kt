@@ -16,7 +16,7 @@ data class YtSearchResult(
 
 object YtdlpSearchFetcher {
 
-    private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
+    private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp-fb"
 
     suspend fun search(query: String, limit: Int = 20, offset: Int = 0): List<YtSearchResult> =
         withContext(Dispatchers.IO) {

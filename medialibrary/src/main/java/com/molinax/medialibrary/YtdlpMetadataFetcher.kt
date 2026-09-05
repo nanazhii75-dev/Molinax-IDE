@@ -15,7 +15,7 @@ data class VideoMetadata(
 
 object YtdlpMetadataFetcher {
 
-    private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
+    private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp-fb"
     private const val MAX_ATTEMPTS = 3
     private const val RETRY_DELAY_MS = 1500L
 
