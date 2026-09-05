@@ -1,17 +1,22 @@
 package com.termux.app.activities;
 
 import android.os.Bundle;
-import io.github.rosemoe.sora.widget.CodeEditor;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.termux.R;
+import com.termux.app.editor.TextMateSetup;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.widget.CodeEditor;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -39,6 +44,7 @@ public class EditorActivity extends AppCompatActivity {
         file = new File(path);
         filePathView.setText(path);
         loadFile();
+        applyHighlighting();
     }
 
     private void loadFile() {
@@ -58,6 +64,41 @@ public class EditorActivity extends AppCompatActivity {
         } catch (IOException e) {
             Toast.makeText(this, "Gagal baca file: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void applyHighlighting() {
+        if (!TextMateSetup.isReady()) {
+            contentInput.postDelayed(this::applyHighlighting, 200);
+            return;
+        }
+
+        String scopeName = scopeNameForFile(file.getName());
+        if (scopeName == null) return;
+
+        try {
+            contentInput.setColorScheme(TextMateColorScheme.create(ThemeRegistry.getInstance()));
+            contentInput.setEditorLanguage(TextMateLanguage.create(scopeName, true));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String scopeNameForFile(String name) {
+        String lower = name.toLowerCase();
+        if (lower.endsWith(".java")) return "source.java";
+        if (lower.endsWith(".kt") || lower.endsWith(".kts")) return "source.kotlin";
+        if (lower.endsWith(".py")) return "source.python";
+        if (lower.endsWith(".xml")) return "text.xml";
+        if (lower.endsWith(".html") || lower.endsWith(".htm")) return "text.html.basic";
+        if (lower.endsWith(".js")) return "source.js";
+        if (lower.endsWith(".md") || lower.endsWith(".markdown")) return "text.html.markdown";
+        if (lower.endsWith(".json")) return "source.json";
+        if (lower.endsWith(".yml") || lower.endsWith(".yaml")) return "source.yaml";
+        if (lower.endsWith(".sh") || lower.endsWith(".bash")) return "source.shell";
+        if (lower.endsWith(".gradle")) return "source.groovy";
+        if (lower.endsWith(".c") || lower.endsWith(".h")) return "source.c";
+        if (lower.endsWith(".cpp") || lower.endsWith(".cc") || lower.endsWith(".cxx") || lower.endsWith(".hpp")) return "source.cpp";
+        return null;
     }
 
     @Override
