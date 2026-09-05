@@ -23,6 +23,7 @@ class DownloadService : Service() {
 
     companion object {
         const val EXTRA_URL = "extra_url"
+        const val EXTRA_PRESET = "extra_preset"
         private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
         private const val CHANNEL_ID = "molinax_download_channel"
         private const val NOTIF_ID = 4242
@@ -33,6 +34,7 @@ class DownloadService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val url = intent?.getStringExtra(EXTRA_URL)
+        val preset = intent?.getStringExtra(EXTRA_PRESET) ?: "audio"
         if (url.isNullOrBlank()) {
             stopSelf()
             return START_NOT_STICKY
@@ -42,7 +44,7 @@ class DownloadService : Service() {
         startForeground(NOTIF_ID, buildNotification("Menyiapkan unduhan...", 0))
 
         scope.launch {
-            runDownload(url)
+            runDownload(url, preset)
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
         }
@@ -50,12 +52,21 @@ class DownloadService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun runDownload(url: String) {
+    private fun formatArgForPreset(preset: String): String = when (preset) {
+        "1080p" -> "bv*[height<=1080]+ba/b[height<=1080]"
+        "720p" -> "bv*[height<=720]+ba/b[height<=720]"
+        "480p" -> "bv*[height<=480]+ba/b[height<=480]"
+        else -> "bestaudio"
+    }
+
+    private fun runDownload(url: String, preset: String) {
         val outDir = "/storage/emulated/0/Download/Molinax/%(title)s.%(ext)s"
+        val formatArg = formatArgForPreset(preset)
+        val label = if (preset == "audio") "audio" else "video $preset"
         try {
             val process = ProcessBuilder(
                 YT_DLP_PATH,
-                "-f", "bestaudio",
+                "-f", formatArg,
                 "--no-warnings",
                 "-o", outDir,
                 url
@@ -65,7 +76,7 @@ class DownloadService : Service() {
                 val match = PROGRESS_REGEX.find(line)
                 if (match != null) {
                     val percent = match.groupValues[1].toFloatOrNull()?.toInt() ?: 0
-                    updateNotification("Mengunduh audio...", percent)
+                    updateNotification("Mengunduh $label...", percent)
                 }
             }
             process.waitFor()
