@@ -102,14 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Masukkan URL video dulu (bukan judul) untuk download", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!PermissionUtils.checkAndRequestLegacyOrManageExternalStoragePermissionIfPathOnPrimaryExternalStorage(
-                    this, "/storage/emulated/0/Download/Molinax/", 1001, true)) {
-                return;
-            }
-            Intent serviceIntent = new Intent(this, DownloadService.class);
-            serviceIntent.putExtra(DownloadService.EXTRA_URL, url);
-            ContextCompat.startForegroundService(this, serviceIntent);
-            Toast.makeText(this, "Download dimulai, cek notifikasi untuk progress", Toast.LENGTH_SHORT).show();
+            showDownloadPresetDialog(url);
         });
     }
     private void playUrl(String url, Button playButton, ProgressBar loadingIndicator) {
@@ -125,6 +118,28 @@ public class MainActivity extends AppCompatActivity {
             }
         );
     }
+    private void showDownloadPresetDialog(String url) {
+        final String[] labels = {"1080p (video)", "720p (video)", "480p (video)", "Audio saja"};
+        final String[] presets = {"1080p", "720p", "480p", "audio"};
+        new AlertDialog.Builder(this)
+            .setTitle("Pilih kualitas unduhan")
+            .setItems(labels, (dialog, which) -> startDownload(url, presets[which]))
+            .setNegativeButton("Batal", null)
+            .show();
+    }
+
+    private void startDownload(String url, String preset) {
+        if (!PermissionUtils.checkAndRequestLegacyOrManageExternalStoragePermissionIfPathOnPrimaryExternalStorage(
+                this, "/storage/emulated/0/Download/Molinax/", 1001, true)) {
+            return;
+        }
+        Intent serviceIntent = new Intent(this, DownloadService.class);
+        serviceIntent.putExtra(DownloadService.EXTRA_URL, url);
+        serviceIntent.putExtra(DownloadService.EXTRA_PRESET, preset);
+        ContextCompat.startForegroundService(this, serviceIntent);
+        Toast.makeText(this, "Download dimulai, cek notifikasi untuk progress", Toast.LENGTH_SHORT).show();
+    }
+
     private void searchByTitle(String query, Button playButton, ProgressBar loadingIndicator) {
         playButton.setEnabled(false);
         loadingIndicator.setVisibility(View.VISIBLE);
