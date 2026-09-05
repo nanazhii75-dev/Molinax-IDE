@@ -25,6 +25,7 @@ class DownloadService : Service() {
         const val EXTRA_URL = "extra_url"
         const val EXTRA_PRESET = "extra_preset"
         private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
+        private const val FFMPEG_PATH = "/data/data/com.termux/files/usr/bin/ffmpeg"
         private const val CHANNEL_ID = "molinax_download_channel"
         private const val NOTIF_ID = 4242
         private val PROGRESS_REGEX = Regex("""\[download]\s+(\d{1,3}\.\d)%""")
@@ -67,20 +68,28 @@ class DownloadService : Service() {
             val process = ProcessBuilder(
                 YT_DLP_PATH,
                 "-f", formatArg,
+                "--ffmpeg-location", FFMPEG_PATH,
                 "--no-warnings",
                 "-o", outDir,
                 url
             ).redirectErrorStream(true).start()
 
+            val lastLines = ArrayDeque<String>()
             BufferedReader(InputStreamReader(process.inputStream)).forEachLine { line ->
                 val match = PROGRESS_REGEX.find(line)
                 if (match != null) {
                     val percent = match.groupValues[1].toFloatOrNull()?.toInt() ?: 0
                     updateNotification("Mengunduh $label...", percent)
                 }
+                if (lastLines.size >= 5) lastLines.removeFirst()
+                lastLines.addLast(line)
             }
-            process.waitFor()
-            updateNotification("Unduhan selesai", 100)
+            val exitCode = process.waitFor()
+            if (exitCode == 0) {
+                updateNotification("Unduhan selesai", 100)
+            } else {
+                updateNotification("Unduhan gagal (exit $exitCode): ${lastLines.lastOrNull() ?: "unknown"}", 0)
+            }
         } catch (e: Exception) {
             updateNotification("Unduhan gagal: ${e.message}", 0)
         }
