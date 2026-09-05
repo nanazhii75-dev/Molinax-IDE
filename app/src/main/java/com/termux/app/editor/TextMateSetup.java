@@ -2,6 +2,8 @@ package com.termux.app.editor;
 
 import android.content.Context;
 
+import org.eclipse.tm4e.core.registry.IThemeSource;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
@@ -9,7 +11,6 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
-import io.github.rosemoe.sora.textmate.languageconfiguration.model.ThemeSource;
 
 public class TextMateSetup {
 
@@ -29,7 +30,11 @@ public class TextMateSetup {
                 for (String theme : THEME_NAMES) {
                     String path = "textmate/themes/" + theme + ".json";
                     ThemeModel model = new ThemeModel(
-                        ThemeSource.fromInputStream(appContext.getAssets().open(path), path, null),
+                        IThemeSource.fromInputStream(
+                            FileProviderRegistry.getInstance().tryGetInputStream(path),
+                            path,
+                            null
+                        ),
                         theme
                     );
                     ThemeRegistry.getInstance().loadTheme(model);
