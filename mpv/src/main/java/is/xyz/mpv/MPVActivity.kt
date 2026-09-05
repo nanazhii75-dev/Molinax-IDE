@@ -542,6 +542,19 @@ class MPVActivity : AppCompatActivity(), MPVLib.EventObserver, TouchGesturesObse
         activityIsStopped = true
     }
 
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        // Otomatis masuk PiP saat user pindah app / tekan Home, hanya kalau
+        // sedang memutar video (audio-only sudah ditangani BackgroundPlaybackService).
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return
+        if (isFinishing)
+            return
+        if (isPlayingAudioOnly())
+            return
+        goIntoPiP()
+    }
+
     override fun onResume() {
         // If we weren't actually in the background (e.g. multi window mode), don't reinitialize stuff
         if (activityIsForeground) {
