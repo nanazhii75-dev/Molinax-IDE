@@ -80,7 +80,7 @@ jobs:
           cp "$SYSROOT_LIB/libc++_shared.so" "prefix/${{ matrix.arch }}/lib/"
 
       - name: Upload native libraries (libmpv + FFmpeg deps + libplayer)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: libmpv-${{ matrix.abi }}
           path: native-build/prefix/${{ matrix.arch }}/lib/*.so
