@@ -27,7 +27,7 @@ object YtdlpSearchFetcher {
                     "--flat-playlist",
                     "--dump-json",
                     "--no-warnings",
-                    "ytsearchdate$limit:$query"
+                    "ytsearch$limit:$query"
                 ).start()
 
                 BufferedReader(InputStreamReader(process.inputStream)).useLines { lines ->
@@ -37,7 +37,7 @@ object YtdlpSearchFetcher {
                 }
                 process.waitFor()
             } catch (e: Exception) {
-                // gagal search, kembalikan apa yang sempat terkumpul (bisa kosong)
+                android.util.Log.e("YtdlpSearchFetcher", "search gagal: ${e.message}", e)
             }
             results
         }
