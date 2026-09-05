@@ -1,0 +1,17 @@
+{
+  "grammars": [
+    { "name": "Java", "scopeName": "source.java", "path": "languages/java.json" },
+    { "name": "Kotlin", "scopeName": "source.kotlin", "path": "languages/kotlin.json" },
+    { "name": "Python", "scopeName": "source.python", "path": "languages/python.json" },
+    { "name": "XML", "scopeName": "text.xml", "path": "languages/xml.json" },
+    { "name": "HTML", "scopeName": "text.html.basic", "path": "languages/html.json" },
+    { "name": "JavaScript", "scopeName": "source.js", "path": "languages/javascript.json" },
+    { "name": "Markdown", "scopeName": "text.html.markdown", "path": "languages/markdown.json" },
+    { "name": "JSON", "scopeName": "source.json", "path": "languages/json.json" },
+    { "name": "YAML", "scopeName": "source.yaml", "path": "languages/yaml.json" },
+    { "name": "Shell", "scopeName": "source.shell", "path": "languages/shellscript.json" },
+    { "name": "Groovy", "scopeName": "source.groovy", "path": "languages/groovy.json" },
+    { "name": "C", "scopeName": "source.c", "path": "languages/c.json" },
+    { "name": "C++", "scopeName": "source.cpp", "path": "languages/cpp.json" }
+  ]
+}

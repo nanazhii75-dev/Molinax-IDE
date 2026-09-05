@@ -16,6 +16,7 @@ import com.termux.shared.termux.shell.command.environment.TermuxShellEnvironment
 import com.termux.shared.termux.shell.am.TermuxAmSocketServer;
 import com.termux.shared.termux.shell.TermuxShellManager;
 import com.termux.shared.termux.theme.TermuxThemeUtils;
+import com.termux.app.editor.TextMateSetup;
 
 public class TermuxApplication extends Application {
 
@@ -67,6 +68,9 @@ public class TermuxApplication extends Application {
 
         // Init TermuxShellEnvironment constants and caches after everything has been setup including termux-am-socket server
         TermuxShellEnvironment.init(this);
+
+        // Init TextMate grammar+theme registry for Code Editor in background thread
+        TextMateSetup.init(this);
 
         if (isTermuxFilesDirectoryAccessible) {
             TermuxShellEnvironment.writeEnvironmentToFile(this);
