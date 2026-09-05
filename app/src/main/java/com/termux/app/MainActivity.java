@@ -7,6 +7,8 @@ import com.molinax.medialibrary.YtSearchResult;
 import java.util.List;
 import com.molinax.medialibrary.DownloadService;
 import com.termux.shared.android.PermissionUtils;
+import com.termux.app.activities.EditorActivity;
+import java.io.File;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 showMpvHome();
                 return true;
             } else if (id == R.id.nav_editor) {
-                showPlaceholder("Code Editor — coming soon");
+                showEditorHome();
                 return true;
             } else if (id == R.id.nav_utilities) {
                 showPlaceholder("Utilities — coming soon");
@@ -70,6 +72,30 @@ public class MainActivity extends AppCompatActivity {
         tv.setTextSize(18);
         tv.setPadding(48, 48, 48, 48);
         contentFrame.addView(tv);
+    }
+
+    private void showEditorHome() {
+        contentFrame.removeAllViews();
+        View view = getLayoutInflater().inflate(R.layout.view_editor_home, contentFrame, false);
+        contentFrame.addView(view);
+
+        EditText pathInput = view.findViewById(R.id.editor_path_input);
+        Button openButton = view.findViewById(R.id.editor_open_button);
+        openButton.setOnClickListener(v -> {
+            String path = pathInput.getText().toString().trim();
+            if (TextUtils.isEmpty(path)) {
+                Toast.makeText(this, "Isi path file dulu", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File f = new File(path);
+            if (!f.exists() || !f.isFile()) {
+                Toast.makeText(this, "File tidak ditemukan: " + path, Toast.LENGTH_LONG).show();
+                return;
+            }
+            Intent intent = new Intent(this, EditorActivity.class);
+            intent.putExtra(EditorActivity.EXTRA_FILE_PATH, path);
+            startActivity(intent);
+        });
     }
 
     private void showMpvHome() {

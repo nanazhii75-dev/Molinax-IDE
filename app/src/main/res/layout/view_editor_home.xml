@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buka File"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+    <EditText
+        android:id="@+id/editor_path_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Path lengkap file, misal /storage/emulated/0/Molinax-IDE/..."
+        android:inputType="text"
+        android:maxLines="1" />
+    <Button
+        android:id="@+id/editor_open_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Buka"
+        android:backgroundTint="#00C853"
+        android:textColor="@color/white" />
+</LinearLayout>
