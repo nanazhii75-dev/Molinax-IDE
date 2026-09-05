@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Unduh Audio"
+        android:text="Unduh"
         android:backgroundTint="#F44336"
         android:textColor="@color/white" />
 
