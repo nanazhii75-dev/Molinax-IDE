@@ -2017,6 +2017,15 @@ class MPVActivity : AppCompatActivity(), MPVLib.EventObserver, TouchGesturesObse
 
     override fun event(eventId: Int) {
         if (eventId == MpvEvent.MPV_EVENT_END_FILE) {
+            if (!playbackHasStarted) {
+                eventUiHandler.post {
+                    Toast.makeText(
+                        this,
+                        "Gagal memutar: cek koneksi internet atau URL tidak didukung",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
             psc.eof()
             updateMediaSession()
         }
