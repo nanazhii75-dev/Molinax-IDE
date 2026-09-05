@@ -1,7 +1,7 @@
 package com.termux.app.activities;
 
 import android.os.Bundle;
-import android.widget.EditText;
+import io.github.rosemoe.sora.widget.CodeEditor;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +18,7 @@ public class EditorActivity extends AppCompatActivity {
     public static final String EXTRA_FILE_PATH = "com.termux.app.activities.EditorActivity.EXTRA_FILE_PATH";
 
     private File file;
-    private EditText contentInput;
+    private CodeEditor contentInput;
     private TextView filePathView;
 
     @Override

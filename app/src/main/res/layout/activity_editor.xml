@@ -13,15 +13,9 @@
         android:background="@color/black"
         android:singleLine="true"
         android:ellipsize="start" />
-    <EditText
+    <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor_content_input"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="top|start"
-        android:inputType="textMultiLine|textNoSuggestions"
-        android:typeface="monospace"
-        android:textSize="14sp"
-        android:padding="12dp"
-        android:background="@android:color/transparent" />
+        android:layout_weight="1" />
 </LinearLayout>
