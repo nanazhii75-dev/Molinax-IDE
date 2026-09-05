@@ -106,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void playUrl(String url, Button playButton, ProgressBar loadingIndicator) {
+        playUrl(url, null, -1, playButton, loadingIndicator);
+    }
+
+    private void playUrl(String url, java.util.List<String> queueUrls, int startIndex, Button playButton, ProgressBar loadingIndicator) {
         playButton.setEnabled(false);
         loadingIndicator.setVisibility(View.VISIBLE);
         MediaLibraryBridge.INSTANCE.resolveAndSave(
@@ -114,7 +118,11 @@ public class MainActivity extends AppCompatActivity {
             (title, thumbnailUrl) -> {
                 playButton.setEnabled(true);
                 loadingIndicator.setVisibility(View.GONE);
-                launchMpvPlayer(url);
+                if (queueUrls != null && startIndex >= 0) {
+                    launchMpvPlayer(queueUrls, startIndex);
+                } else {
+                    launchMpvPlayer(url);
+                }
             }
         );
     }
@@ -180,7 +188,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResultClick(com.molinax.medialibrary.YtSearchResult result) {
                 dialog.dismiss();
-                playUrl(result.getUrl(), playButton, loadingIndicator);
+                java.util.List<String> urls = new java.util.ArrayList<>();
+                for (com.molinax.medialibrary.YtSearchResult r : results) {
+                    urls.add(r.getUrl());
+                }
+                int startIndex = Math.max(results.indexOf(result), 0);
+                playUrl(result.getUrl(), urls, startIndex, playButton, loadingIndicator);
             }
 
             @Override
@@ -211,6 +224,27 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, is.xyz.mpv.MPVActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
+    private void launchMpvPlayer(java.util.List<String> urls, int startIndex) {
+        if (urls.size() <= 1) {
+            launchMpvPlayer(urls.get(startIndex));
+            return;
+        }
+        // Rotate: mulai dari video yang diklik, sisanya digilir ke belakang,
+        // supaya playlist-prev/playlist-next bawaan MPVActivity sama-sama
+        // selalu punya video untuk diputar (queue melingkar per halaman search).
+        java.util.List<String> queue = new java.util.ArrayList<>();
+        queue.addAll(urls.subList(startIndex, urls.size()));
+        queue.addAll(urls.subList(0, startIndex));
+
+        java.util.ArrayList<Uri> uris = new java.util.ArrayList<>();
+        for (String u : queue) uris.add(Uri.parse(u));
+
+        Intent intent = new Intent(this, is.xyz.mpv.MPVActivity.class);
+        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         startActivity(intent);
     }
 }
