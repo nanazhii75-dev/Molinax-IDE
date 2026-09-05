@@ -162,9 +162,18 @@ public class MainActivity extends AppCompatActivity {
             .setView(dialogView)
             .setNegativeButton("Batal", null)
             .create();
-        SearchResultAdapter adapter = new SearchResultAdapter(results, result -> {
-            dialog.dismiss();
-            playUrl(result.getUrl(), playButton, loadingIndicator);
+        SearchResultAdapter adapter = new SearchResultAdapter(results, new SearchResultAdapter.OnResultClick() {
+            @Override
+            public void onResultClick(com.molinax.medialibrary.YtSearchResult result) {
+                dialog.dismiss();
+                playUrl(result.getUrl(), playButton, loadingIndicator);
+            }
+
+            @Override
+            public void onDownloadClick(com.molinax.medialibrary.YtSearchResult result) {
+                dialog.dismiss();
+                showDownloadPresetDialog(result.getUrl());
+            }
         });
         recyclerView.setAdapter(adapter);
         dialog.show();

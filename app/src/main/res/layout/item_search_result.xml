@@ -40,4 +40,12 @@
         android:ellipsize="end"
         android:textSize="14sp" />
 
+    <ImageButton
+        android:id="@+id/download_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Unduh"
+        android:src="@android:drawable/stat_sys_download" />
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.termux.app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     public interface OnResultClick {
         void onResultClick(YtSearchResult result);
+        void onDownloadClick(YtSearchResult result);
     }
 
     private final List<YtSearchResult> results;
@@ -56,6 +58,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             .into(holder.thumb);
 
         holder.itemView.setOnClickListener(v -> listener.onResultClick(result));
+        holder.downloadButton.setOnClickListener(v -> listener.onDownloadClick(result));
     }
 
     @Override
@@ -73,12 +76,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         ImageView thumb;
         TextView durationBadge;
         TextView title;
+        ImageButton downloadButton;
 
         ViewHolder(View itemView) {
             super(itemView);
             thumb = itemView.findViewById(R.id.thumb);
             durationBadge = itemView.findViewById(R.id.duration_badge);
             title = itemView.findViewById(R.id.title);
+            downloadButton = itemView.findViewById(R.id.download_button);
         }
     }
 }
