@@ -65,6 +65,7 @@ class DownloadService : Service() {
         val formatArg = formatArgForPreset(preset)
         val label = if (preset == "audio") "audio" else "video $preset"
         try {
+            YtdlpFbWrapperProvisioner.ensureInstalled()
             val process = ProcessBuilder(
                 YT_DLP_PATH,
                 "-f", formatArg,

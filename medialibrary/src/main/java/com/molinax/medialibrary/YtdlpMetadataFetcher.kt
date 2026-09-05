@@ -29,6 +29,7 @@ object YtdlpMetadataFetcher {
     suspend fun fetch(url: String): VideoMetadata? = withContext(Dispatchers.IO) {
         for (attempt in 1..MAX_ATTEMPTS) {
             try {
+                YtdlpFbWrapperProvisioner.ensureInstalled()
                 val process = ProcessBuilder(YT_DLP_PATH, "--dump-json", url)
                     .redirectErrorStream(false)
                     .start()

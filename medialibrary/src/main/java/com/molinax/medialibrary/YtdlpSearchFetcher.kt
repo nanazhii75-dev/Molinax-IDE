@@ -23,6 +23,7 @@ object YtdlpSearchFetcher {
             val results = mutableListOf<YtSearchResult>()
             try {
                 val total = offset + limit
+                YtdlpFbWrapperProvisioner.ensureInstalled()
                 val process = ProcessBuilder(
                     YT_DLP_PATH,
                     "--flat-playlist",
