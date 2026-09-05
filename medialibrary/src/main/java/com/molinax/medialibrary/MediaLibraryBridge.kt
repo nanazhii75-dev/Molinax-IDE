@@ -40,9 +40,14 @@ object MediaLibraryBridge {
      * [callback] on the main thread with the results. Returns an empty list on
      * failure or no matches — never throws back to the Java caller.
      */
+    fun search(query: String, offset: Int, callback: OnSearchResolved) { CoroutineScope(Dispatchers.Main).launch { val results = YtdlpSearchFetcher.search(query, offset = offset); callback.onSearchResolved(results) } }
     fun search(query: String, callback: OnSearchResolved) {
+        search(query, 0, callback)
+    }
+
+    fun search(query: String, offset: Int, callback: OnSearchResolved) {
         CoroutineScope(Dispatchers.Main).launch {
-            val results = YtdlpSearchFetcher.search(query)
+            val results = YtdlpSearchFetcher.search(query, offset = offset)
             callback.onSearchResolved(results)
         }
     }

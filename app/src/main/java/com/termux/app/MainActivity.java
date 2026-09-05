@@ -150,18 +150,32 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Tidak ditemukan", Toast.LENGTH_SHORT).show();
                 return;
             }
-            showSearchResultsDialog(results, playButton, loadingIndicator);
+            showSearchResultsDialog(query, 0, results, playButton, loadingIndicator);
         });
     }
-    private void showSearchResultsDialog(List<YtSearchResult> results, Button playButton, ProgressBar loadingIndicator) {
+    private void showSearchResultsDialog(String query, int offset, List<YtSearchResult> results, Button playButton, ProgressBar loadingIndicator) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_search_results, null);
         RecyclerView recyclerView = dialogView.findViewById(R.id.search_results_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Button prevButton = dialogView.findViewById(R.id.search_prev_button);
+        Button nextButton = dialogView.findViewById(R.id.search_next_button);
         AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle("Pilih video")
             .setView(dialogView)
             .setNegativeButton("Batal", null)
             .create();
+        final int[] currentOffset = {offset};
+        bindSearchResultsAdapter(recyclerView, dialog, results, playButton, loadingIndicator);
+        prevButton.setEnabled(currentOffset[0] > 0);
+        prevButton.setOnClickListener(v -> fetchSearchPage(
+            query, Math.max(0, currentOffset[0] - 20), currentOffset,
+            prevButton, nextButton, recyclerView, dialog, playButton, loadingIndicator));
+        nextButton.setOnClickListener(v -> fetchSearchPage(
+            query, currentOffset[0] + 20, currentOffset,
+            prevButton, nextButton, recyclerView, dialog, playButton, loadingIndicator));
+        dialog.show();
+    }
+    private void bindSearchResultsAdapter(RecyclerView recyclerView, AlertDialog dialog, List<YtSearchResult> results, Button playButton, ProgressBar loadingIndicator) {
         SearchResultAdapter adapter = new SearchResultAdapter(results, new SearchResultAdapter.OnResultClick() {
             @Override
             public void onResultClick(com.molinax.medialibrary.YtSearchResult result) {
@@ -176,7 +190,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-        dialog.show();
+    }
+    private void fetchSearchPage(String query, int newOffset, int[] currentOffset, Button prevButton, Button nextButton, RecyclerView recyclerView, AlertDialog dialog, Button playButton, ProgressBar loadingIndicator) {
+        prevButton.setEnabled(false);
+        nextButton.setEnabled(false);
+        MediaLibraryBridge.INSTANCE.search(query, newOffset, results -> {
+            if (results.isEmpty()) {
+                Toast.makeText(this, "Tidak ada hasil lagi", Toast.LENGTH_SHORT).show();
+                prevButton.setEnabled(currentOffset[0] > 0);
+                nextButton.setEnabled(true);
+                return;
+            }
+            currentOffset[0] = newOffset;
+            bindSearchResultsAdapter(recyclerView, dialog, results, playButton, loadingIndicator);
+            prevButton.setEnabled(currentOffset[0] > 0);
+            nextButton.setEnabled(true);
+        });
     }
     private void launchMpvPlayer(String url) {
         Intent intent = new Intent(this, is.xyz.mpv.MPVActivity.class);

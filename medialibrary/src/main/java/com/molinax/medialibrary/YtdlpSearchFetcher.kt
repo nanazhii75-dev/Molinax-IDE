@@ -18,16 +18,18 @@ object YtdlpSearchFetcher {
 
     private const val YT_DLP_PATH = "/data/data/com.termux/files/usr/bin/yt-dlp"
 
-    suspend fun search(query: String, limit: Int = 20): List<YtSearchResult> =
+    suspend fun search(query: String, limit: Int = 20, offset: Int = 0): List<YtSearchResult> =
         withContext(Dispatchers.IO) {
             val results = mutableListOf<YtSearchResult>()
             try {
+                val total = offset + limit
                 val process = ProcessBuilder(
                     YT_DLP_PATH,
                     "--flat-playlist",
                     "--dump-json",
                     "--no-warnings",
-                    "ytsearch$limit:$query"
+                    "--playlist-items", "${offset + 1}-$total",
+                    "ytsearch$total:$query"
                 ).start()
 
                 BufferedReader(InputStreamReader(process.inputStream)).useLines { lines ->
