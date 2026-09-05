@@ -11,7 +11,6 @@ import androidx.core.app.PendingIntentCompat
 class NotificationButtonReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.v(TAG, "NotificationButtonReceiver: ${intent!!.action}")
-        android.widget.Toast.makeText(context, "DEBUG: diterima " + intent.action, android.widget.Toast.LENGTH_SHORT).show()
         // remember to update AndroidManifest.xml too when adding here
         when (intent.action) {
             "$PREFIX.PLAY_PAUSE" -> MPVLib.command(arrayOf("cycle", "pause"))
