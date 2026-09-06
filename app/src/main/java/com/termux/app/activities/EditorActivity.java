@@ -312,7 +312,9 @@ public class EditorActivity extends AppCompatActivity {
             contentInput.setWordwrap(wrapNow);
         }
         else if (id == R.id.action_read_only) {
-            Toast.makeText(this, "Hanya Baca — segera hadir", Toast.LENGTH_SHORT).show();
+            boolean readOnlyNow = !item.isChecked();
+            item.setChecked(readOnlyNow);
+            contentInput.setEditable(!readOnlyNow);
         }
         else if (id == R.id.action_syntax) {
             Toast.makeText(this, "Syntax — segera hadir", Toast.LENGTH_SHORT).show();
