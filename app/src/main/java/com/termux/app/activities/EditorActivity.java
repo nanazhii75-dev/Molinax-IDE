@@ -2,10 +2,11 @@ package com.termux.app.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
+import android.text.style.ImageSpan;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -204,8 +205,15 @@ public class EditorActivity extends AppCompatActivity {
         String text = tab.getDisplayName() + " ●";
         SpannableString spannable = new SpannableString(text);
         int dotStart = text.length() - 1;
-        spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#F44336")), dotStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new RelativeSizeSpan(2.2f), dotStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        int sizePx = (int) (getResources().getDisplayMetrics().density * 16); // dot bulat 16dp, ukuran pasti terlepas dari font
+        ShapeDrawable dot = new ShapeDrawable(new OvalShape());
+        dot.setIntrinsicWidth(sizePx);
+        dot.setIntrinsicHeight(sizePx);
+        dot.setBounds(0, 0, sizePx, sizePx);
+        dot.getPaint().setColor(Color.parseColor("#F44336"));
+
+        spannable.setSpan(new ImageSpan(dot, ImageSpan.ALIGN_BASELINE), dotStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
