@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/black"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
     <HorizontalScrollView
         android:id="@+id/editor_tab_scroll"
         android:layout_width="match_parent"
