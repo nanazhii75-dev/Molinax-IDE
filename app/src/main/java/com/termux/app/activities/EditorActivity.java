@@ -66,8 +66,15 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    private int highlightRetryCount = 0;
+
     private void applyHighlighting() {
         if (!TextMateSetup.isReady()) {
+            highlightRetryCount++;
+            if (highlightRetryCount > 25) {
+                Toast.makeText(this, "TextMateSetup timeout. Last error: " + TextMateSetup.getLastError(), Toast.LENGTH_LONG).show();
+                return;
+            }
             contentInput.postDelayed(this::applyHighlighting, 200);
             return;
         }
