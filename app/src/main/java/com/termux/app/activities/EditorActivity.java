@@ -170,14 +170,6 @@ public class EditorActivity extends AppCompatActivity {
         contentInput.setText(tab.content);
         applyHighlighting(tab);
 
-        contentInput.post(() -> {
-            try {
-                contentInput.setSelection(tab.cursorLine, 0, true);
-            } catch (Exception ignored) {
-                // baris tersimpan mungkin sudah tidak valid (file berubah di luar), abaikan
-            }
-        });
-
         rebuildTabStrip();
     }
 
@@ -254,18 +246,33 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         String scopeName = scopeNameForFile(tab.getDisplayName());
-        if (scopeName == null) return;
+        if (scopeName != null) {
+            try {
+                contentInput.setColorScheme(TextMateColorScheme.create(ThemeRegistry.getInstance()));
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            try {
+                contentInput.setEditorLanguage(TextMateLanguage.create(scopeName, true));
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
 
-        try {
-            contentInput.setColorScheme(TextMateColorScheme.create(ThemeRegistry.getInstance()));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        try {
-            contentInput.setEditorLanguage(TextMateLanguage.create(scopeName, true));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        restoreCursorIfStillActive(tab);
+    }
+
+    private void restoreCursorIfStillActive(TabState tab) {
+        // kalau user sudah pindah tab lain selagi menunggu TextMateSetup siap (retry 200ms),
+        // jangan pasang kursor tab ini ke tab yang sedang tampil sekarang
+        if (tabs.indexOf(tab) != activeTabIndex) return;
+        contentInput.post(() -> {
+            try {
+                contentInput.setSelection(tab.cursorLine, 0, true);
+            } catch (Exception ignored) {
+                // baris tersimpan mungkin sudah tidak valid (file berubah di luar), abaikan
+            }
+        });
     }
 
     private String scopeNameForFile(String name) {
