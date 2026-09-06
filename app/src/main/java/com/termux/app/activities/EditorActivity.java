@@ -109,6 +109,7 @@ public class EditorActivity extends AppCompatActivity {
                 tab.savedContent = tab.content;
                 tab.explicitSaveContent = tab.content;
                 tab.cursorLine = entry.cursorLine;
+                Toast.makeText(this, "DEBUG restore: " + tab.getDisplayName() + " cursorLine=" + entry.cursorLine, Toast.LENGTH_LONG).show();
                 tabs.add(tab);
             } catch (Exception e) {
                 // file hilang / izin content:// dicabut selagi app tidak jalan — skip, jangan crash
@@ -267,6 +268,7 @@ public class EditorActivity extends AppCompatActivity {
         // jangan pasang kursor tab ini ke tab yang sedang tampil sekarang
         if (tabs.indexOf(tab) != activeTabIndex) return;
         contentInput.post(() -> {
+            Toast.makeText(this, "DEBUG apply: " + tab.getDisplayName() + " cursorLine=" + tab.cursorLine + " totalLines=" + contentInput.getLineCount(), Toast.LENGTH_LONG).show();
             try {
                 contentInput.setSelection(tab.cursorLine, 0, true);
             } catch (Exception ignored) {
@@ -297,6 +299,9 @@ public class EditorActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveActiveTabState();
+        if (activeTabIndex >= 0 && activeTabIndex < tabs.size()) {
+            Toast.makeText(this, "DEBUG onPause save: " + tabs.get(activeTabIndex).getDisplayName() + " cursorLine=" + tabs.get(activeTabIndex).cursorLine, Toast.LENGTH_LONG).show();
+        }
         for (TabState tab : tabs) {
             if (!tab.content.equals(tab.savedContent)) {
                 try {
