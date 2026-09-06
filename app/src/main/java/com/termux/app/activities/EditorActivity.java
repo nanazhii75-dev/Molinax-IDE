@@ -2,6 +2,10 @@ package com.termux.app.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -195,12 +199,22 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    private CharSequence buildTabLabel(TabState tab) {
+        if (!tab.isDirty) return tab.getDisplayName();
+        String text = tab.getDisplayName() + " ●";
+        SpannableString spannable = new SpannableString(text);
+        int dotStart = text.length() - 1;
+        spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#F44336")), dotStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new RelativeSizeSpan(2.2f), dotStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
     private void updateTabLabel(int index) {
         if (index < 0 || index >= tabStrip.getChildCount() || index >= tabs.size()) return;
         View child = tabStrip.getChildAt(index);
         if (!(child instanceof TextView)) return;
         TabState tab = tabs.get(index);
-        ((TextView) child).setText(tab.isDirty ? tab.getDisplayName() + " •" : tab.getDisplayName());
+        ((TextView) child).setText(buildTabLabel(tab));
     }
 
     private void rebuildTabStrip() {
@@ -210,7 +224,7 @@ public class EditorActivity extends AppCompatActivity {
             TabState tab = tabs.get(i);
 
             TextView tabView = new TextView(this);
-            tabView.setText(tab.isDirty ? tab.getDisplayName() + " •" : tab.getDisplayName());
+            tabView.setText(buildTabLabel(tab));
             tabView.setTextSize(13);
             tabView.setPadding(32, 24, 32, 24);
             tabView.setGravity(Gravity.CENTER);
