@@ -3,6 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <HorizontalScrollView
+        android:id="@+id/editor_tab_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:scrollbars="none">
+        <LinearLayout
+            android:id="@+id/editor_tab_strip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
     <TextView
         android:id="@+id/editor_file_path"
         android:layout_width="match_parent"

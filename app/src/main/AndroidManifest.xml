@@ -106,6 +106,7 @@
         <activity
             android:name=".app.activities.EditorActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:label="@string/application_name"
             android:theme="@style/Theme.TermuxApp.DayNight.NoActionBar" />
 
