@@ -15,6 +15,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolve
 public class TextMateSetup {
 
     private static final AtomicBoolean isReady = new AtomicBoolean(false);
+    private static volatile String lastError = null;
 
     private static final String[] THEME_NAMES = {"ayu-dark", "dracula", "light-plus", "solarized-dark"};
     private static final String DEFAULT_THEME = "ayu-dark";
@@ -44,7 +45,8 @@ public class TextMateSetup {
                 GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");
 
                 isReady.set(true);
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                lastError = e.toString();
                 e.printStackTrace();
             }
         }).start();
@@ -52,5 +54,9 @@ public class TextMateSetup {
 
     public static boolean isReady() {
         return isReady.get();
+    }
+
+    public static String getLastError() {
+        return lastError;
     }
 }
