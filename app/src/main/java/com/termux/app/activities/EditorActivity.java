@@ -3,8 +3,10 @@ package com.termux.app.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -304,7 +306,29 @@ public class EditorActivity extends AppCompatActivity {
             Toast.makeText(this, "Masukkan Tanda Waktu — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_goto_line) {
-            Toast.makeText(this, "Pergi ke Baris — segera hadir", Toast.LENGTH_SHORT).show();
+            int totalLines = contentInput.getLineCount();
+            final EditText input = new EditText(this);
+            input.setHint("1 - " + totalLines);
+            new AlertDialog.Builder(this)
+                .setTitle("Pergi ke Baris")
+                .setView(input)
+                .setPositiveButton("Pergi", (dialog, which) -> {
+                    String text = input.getText().toString().trim();
+                    if (!text.isEmpty()) {
+                        try {
+                            int targetLine = Integer.parseInt(text) - 1;
+                            if (targetLine >= 0 && targetLine < totalLines) {
+                                contentInput.setSelection(targetLine, 0);
+                            } else {
+                                Toast.makeText(this, "Baris di luar jangkauan", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, "Nomor baris tidak valid", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Batal", null)
+                .show();
         }
         else if (id == R.id.action_word_wrap) {
             boolean wrapNow = !item.isChecked();
