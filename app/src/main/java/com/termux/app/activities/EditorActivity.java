@@ -77,8 +77,14 @@ public class EditorActivity extends AppCompatActivity {
 
         try {
             contentInput.setColorScheme(TextMateColorScheme.create(ThemeRegistry.getInstance()));
+        } catch (Throwable e) {
+            Toast.makeText(this, "Gagal set color scheme: " + e, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        try {
             contentInput.setEditorLanguage(TextMateLanguage.create(scopeName, true));
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            Toast.makeText(this, "Gagal set language: " + e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
