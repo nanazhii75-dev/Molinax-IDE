@@ -15,6 +15,7 @@ import com.termux.R;
 import com.termux.app.editor.EditableSource;
 import com.termux.app.editor.TabState;
 import com.termux.app.editor.TextMateSetup;
+import com.termux.app.editor.EditorSessionManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,12 +46,8 @@ public class EditorActivity extends AppCompatActivity {
         filePathView = findViewById(R.id.editor_file_path);
         contentInput = findViewById(R.id.editor_content_input);
 
+        restoreSession();
         handleIncomingIntent(getIntent());
-    }
-
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
     }
 
     @Override
@@ -70,6 +67,40 @@ public class EditorActivity extends AppCompatActivity {
             return;
         }
         openOrFocusTab(pathOrUri);
+    }
+
+    private void restoreSession() {
+        EditorSessionManager.SessionState state = EditorSessionManager.load(this);
+        if (state == null || state.tabs.isEmpty()) return;
+
+        for (EditorSessionManager.TabEntry entry : state.tabs) {
+            if (!isRestorable(entry.pathOrUri)) continue;
+            try {
+                TabState tab = new TabState(entry.pathOrUri);
+                tab.source = EditableSource.from(this, entry.pathOrUri);
+                tab.content = tab.source.read();
+                tab.cursorLine = entry.cursorLine;
+                tabs.add(tab);
+            } catch (Exception e) {
+                // file hilang / izin content:// dicabut selagi app tidak jalan — skip, jangan crash
+            }
+        }
+
+        if (!tabs.isEmpty()) {
+            int restoreIndex = Math.min(Math.max(state.activeTabIndex, 0), tabs.size() - 1);
+            switchToTab(restoreIndex);
+        }
+    }
+
+    private boolean isRestorable(String pathOrUri) {
+        if (pathOrUri.startsWith("content://")) {
+            android.net.Uri uri = android.net.Uri.parse(pathOrUri);
+            for (android.content.UriPermission perm : getContentResolver().getPersistedUriPermissions()) {
+                if (perm.getUri().equals(uri) && perm.isReadPermission()) return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     private void openOrFocusTab(String pathOrUri) {
@@ -206,5 +237,6 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
         }
+        EditorSessionManager.save(this, activeTabIndex, tabs);
     }
 }
