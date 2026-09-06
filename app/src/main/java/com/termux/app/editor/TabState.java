@@ -8,6 +8,7 @@ public class TabState {
     public final String sourcePathOrUri;
     public transient EditableSource source; // rebuilt on load, not persisted directly
     public String content = "";
+    public String savedContent = ""; // baseline (last read/written) content, used to detect real dirty state
     public int cursorLine = 0;
     public boolean isDirty = false;
 

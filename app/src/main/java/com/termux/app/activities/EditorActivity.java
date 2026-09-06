@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
@@ -65,6 +66,8 @@ public class EditorActivity extends AppCompatActivity {
         contentInput.setWordwrap(editorPrefs.getBoolean(KEY_WORD_WRAP, false));
         contentInput.setEditable(!editorPrefs.getBoolean(KEY_READ_ONLY, false));
 
+        contentInput.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> updateDirtyIndicator());
+
         restoreSession();
         handleIncomingIntent(getIntent());
     }
@@ -98,6 +101,7 @@ public class EditorActivity extends AppCompatActivity {
                 TabState tab = new TabState(entry.pathOrUri);
                 tab.source = EditableSource.from(this, entry.pathOrUri);
                 tab.content = tab.source.read();
+                tab.savedContent = tab.content;
                 tab.cursorLine = entry.cursorLine;
                 tabs.add(tab);
             } catch (Exception e) {
@@ -137,6 +141,7 @@ public class EditorActivity extends AppCompatActivity {
         tab.source = EditableSource.from(this, pathOrUri);
         try {
             tab.content = tab.source.read();
+            tab.savedContent = tab.content;
         } catch (IOException e) {
             Toast.makeText(this, "Gagal baca file: " + e.getMessage(), Toast.LENGTH_LONG).show();
             return;
@@ -172,15 +177,30 @@ public class EditorActivity extends AppCompatActivity {
     private void saveActiveTabState() {
         if (activeTabIndex < 0 || activeTabIndex >= tabs.size()) return;
         TabState tab = tabs.get(activeTabIndex);
-        String currentText = contentInput.getText().toString();
-        if (!currentText.equals(tab.content)) {
-            tab.content = currentText;
-            tab.isDirty = true;
-        }
+        tab.content = contentInput.getText().toString();
+        tab.isDirty = !tab.content.equals(tab.savedContent);
         try {
             tab.cursorLine = contentInput.getCursor().getLeftLine();
         } catch (Exception ignored) {
         }
+    }
+
+    private void updateDirtyIndicator() {
+        if (activeTabIndex < 0 || activeTabIndex >= tabs.size()) return;
+        TabState tab = tabs.get(activeTabIndex);
+        boolean dirtyNow = !contentInput.getText().toString().equals(tab.savedContent);
+        if (dirtyNow != tab.isDirty) {
+            tab.isDirty = dirtyNow;
+            updateTabLabel(activeTabIndex);
+        }
+    }
+
+    private void updateTabLabel(int index) {
+        if (index < 0 || index >= tabStrip.getChildCount() || index >= tabs.size()) return;
+        View child = tabStrip.getChildAt(index);
+        if (!(child instanceof TextView)) return;
+        TabState tab = tabs.get(index);
+        ((TextView) child).setText(tab.isDirty ? tab.getDisplayName() + " •" : tab.getDisplayName());
     }
 
     private void rebuildTabStrip() {
@@ -190,7 +210,7 @@ public class EditorActivity extends AppCompatActivity {
             TabState tab = tabs.get(i);
 
             TextView tabView = new TextView(this);
-            tabView.setText(tab.getDisplayName());
+            tabView.setText(tab.isDirty ? tab.getDisplayName() + " •" : tab.getDisplayName());
             tabView.setTextSize(13);
             tabView.setPadding(32, 24, 32, 24);
             tabView.setGravity(Gravity.CENTER);
@@ -250,6 +270,7 @@ public class EditorActivity extends AppCompatActivity {
             if (tab.isDirty) {
                 try {
                     tab.source.write(tab.content);
+                    tab.savedContent = tab.content;
                     tab.isDirty = false;
                 } catch (IOException e) {
                     Toast.makeText(this, "Gagal simpan " + tab.getDisplayName() + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
