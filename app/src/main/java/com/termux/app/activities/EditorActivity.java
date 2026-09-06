@@ -307,7 +307,9 @@ public class EditorActivity extends AppCompatActivity {
             Toast.makeText(this, "Pergi ke Baris — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_word_wrap) {
-            Toast.makeText(this, "Pembungkus Kata — segera hadir", Toast.LENGTH_SHORT).show();
+            boolean wrapNow = !item.isChecked();
+            item.setChecked(wrapNow);
+            contentInput.setWordwrap(wrapNow);
         }
         else if (id == R.id.action_read_only) {
             Toast.makeText(this, "Hanya Baca — segera hadir", Toast.LENGTH_SHORT).show();
