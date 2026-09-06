@@ -45,12 +45,14 @@ public class EditorActivity extends AppCompatActivity {
         filePathView = findViewById(R.id.editor_file_path);
         contentInput = findViewById(R.id.editor_content_input);
 
+        Toast.makeText(this, "DEBUG onCreate, tabs=" + tabs.size(), Toast.LENGTH_LONG).show();
         handleIncomingIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Toast.makeText(this, "DEBUG onNewIntent, tabs sebelum=" + tabs.size() + " path=" + intent.getStringExtra(EXTRA_FILE_PATH), Toast.LENGTH_LONG).show();
         setIntent(intent);
         handleIncomingIntent(intent);
     }
