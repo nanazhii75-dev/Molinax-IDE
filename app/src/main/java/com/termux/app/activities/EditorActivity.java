@@ -24,8 +24,11 @@ import com.termux.app.editor.TextMateSetup;
 import com.termux.app.editor.EditorSessionManager;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
@@ -314,7 +317,10 @@ public class EditorActivity extends AppCompatActivity {
             Toast.makeText(this, "Ganti Semua — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_insert_timestamp) {
-            Toast.makeText(this, "Masukkan Tanda Waktu — segera hadir", Toast.LENGTH_SHORT).show();
+            String timestamp = new SimpleDateFormat("EEEE, dd/MM/yyyy HH:mm:ss", new Locale("id", "ID")).format(new Date());
+            int line = contentInput.getCursor().getLeftLine();
+            int column = contentInput.getCursor().getLeftColumn();
+            contentInput.getText().insert(line, column, timestamp);
         }
         else if (id == R.id.action_goto_line) {
             int totalLines = contentInput.getLineCount();
