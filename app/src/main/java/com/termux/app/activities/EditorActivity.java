@@ -276,10 +276,14 @@ public class EditorActivity extends AppCompatActivity {
             Toast.makeText(this, "Berkas Terbaru — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_undo) {
-            Toast.makeText(this, "Undo — segera hadir", Toast.LENGTH_SHORT).show();
+            if (contentInput.canUndo()) {
+                contentInput.undo();
+            }
         }
         else if (id == R.id.action_redo) {
-            Toast.makeText(this, "Redo — segera hadir", Toast.LENGTH_SHORT).show();
+            if (contentInput.canRedo()) {
+                contentInput.redo();
+            }
         }
         else if (id == R.id.action_copy) {
             Toast.makeText(this, "Salin — segera hadir", Toast.LENGTH_SHORT).show();
