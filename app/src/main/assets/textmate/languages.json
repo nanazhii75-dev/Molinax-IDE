@@ -1,17 +1,69 @@
 {
-  "grammars": [
-    { "name": "Java", "scopeName": "source.java", "path": "languages/java.json" },
-    { "name": "Kotlin", "scopeName": "source.kotlin", "path": "languages/kotlin.json" },
-    { "name": "Python", "scopeName": "source.python", "path": "languages/python.json" },
-    { "name": "XML", "scopeName": "text.xml", "path": "languages/xml.json" },
-    { "name": "HTML", "scopeName": "text.html.basic", "path": "languages/html.json" },
-    { "name": "JavaScript", "scopeName": "source.js", "path": "languages/javascript.json" },
-    { "name": "Markdown", "scopeName": "text.html.markdown", "path": "languages/markdown.json" },
-    { "name": "JSON", "scopeName": "source.json", "path": "languages/json.json" },
-    { "name": "YAML", "scopeName": "source.yaml", "path": "languages/yaml.json" },
-    { "name": "Shell", "scopeName": "source.shell", "path": "languages/shellscript.json" },
-    { "name": "Groovy", "scopeName": "source.groovy", "path": "languages/groovy.json" },
-    { "name": "C", "scopeName": "source.c", "path": "languages/c.json" },
-    { "name": "C++", "scopeName": "source.cpp", "path": "languages/cpp.json" }
+  "languages": [
+    {
+      "name": "Java",
+      "scopeName": "source.java",
+      "grammar": "textmate/languages/java.json"
+    },
+    {
+      "name": "Kotlin",
+      "scopeName": "source.kotlin",
+      "grammar": "textmate/languages/kotlin.json"
+    },
+    {
+      "name": "Python",
+      "scopeName": "source.python",
+      "grammar": "textmate/languages/python.json"
+    },
+    {
+      "name": "XML",
+      "scopeName": "text.xml",
+      "grammar": "textmate/languages/xml.json"
+    },
+    {
+      "name": "HTML",
+      "scopeName": "text.html.basic",
+      "grammar": "textmate/languages/html.json"
+    },
+    {
+      "name": "JavaScript",
+      "scopeName": "source.js",
+      "grammar": "textmate/languages/javascript.json"
+    },
+    {
+      "name": "Markdown",
+      "scopeName": "text.html.markdown",
+      "grammar": "textmate/languages/markdown.json"
+    },
+    {
+      "name": "JSON",
+      "scopeName": "source.json",
+      "grammar": "textmate/languages/json.json"
+    },
+    {
+      "name": "YAML",
+      "scopeName": "source.yaml",
+      "grammar": "textmate/languages/yaml.json"
+    },
+    {
+      "name": "Shell",
+      "scopeName": "source.shell",
+      "grammar": "textmate/languages/shellscript.json"
+    },
+    {
+      "name": "Groovy",
+      "scopeName": "source.groovy",
+      "grammar": "textmate/languages/groovy.json"
+    },
+    {
+      "name": "C",
+      "scopeName": "source.c",
+      "grammar": "textmate/languages/c.json"
+    },
+    {
+      "name": "C++",
+      "scopeName": "source.cpp",
+      "grammar": "textmate/languages/cpp.json"
+    }
   ]
 }
