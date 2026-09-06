@@ -2,6 +2,7 @@ package com.termux.app.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.view.Gravity;
@@ -41,6 +42,10 @@ public class EditorActivity extends AppCompatActivity {
     private LinearLayout tabStrip;
     private TextView filePathView;
     private CodeEditor contentInput;
+    private SharedPreferences editorPrefs;
+    private static final String PREFS_EDITOR = "editor_prefs";
+    private static final String KEY_WORD_WRAP = "word_wrap";
+    private static final String KEY_READ_ONLY = "read_only";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,10 @@ public class EditorActivity extends AppCompatActivity {
         contentInput = findViewById(R.id.editor_content_input);
         Toolbar toolbar = findViewById(R.id.editor_toolbar);
         setSupportActionBar(toolbar);
+
+        editorPrefs = getSharedPreferences(PREFS_EDITOR, MODE_PRIVATE);
+        contentInput.setWordwrap(editorPrefs.getBoolean(KEY_WORD_WRAP, false));
+        contentInput.setEditable(!editorPrefs.getBoolean(KEY_READ_ONLY, false));
 
         restoreSession();
         handleIncomingIntent(getIntent());
@@ -250,6 +259,8 @@ public class EditorActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
+        menu.findItem(R.id.action_word_wrap).setChecked(editorPrefs.getBoolean(KEY_WORD_WRAP, false));
+        menu.findItem(R.id.action_read_only).setChecked(editorPrefs.getBoolean(KEY_READ_ONLY, false));
         return true;
     }
 
@@ -334,11 +345,13 @@ public class EditorActivity extends AppCompatActivity {
             boolean wrapNow = !item.isChecked();
             item.setChecked(wrapNow);
             contentInput.setWordwrap(wrapNow);
+            editorPrefs.edit().putBoolean(KEY_WORD_WRAP, wrapNow).apply();
         }
         else if (id == R.id.action_read_only) {
             boolean readOnlyNow = !item.isChecked();
             item.setChecked(readOnlyNow);
             contentInput.setEditable(!readOnlyNow);
+            editorPrefs.edit().putBoolean(KEY_READ_ONLY, readOnlyNow).apply();
         }
         else if (id == R.id.action_syntax) {
             Toast.makeText(this, "Syntax — segera hadir", Toast.LENGTH_SHORT).show();
