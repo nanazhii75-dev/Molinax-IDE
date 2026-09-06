@@ -8,6 +8,7 @@ import java.util.List;
 import com.molinax.medialibrary.DownloadService;
 import com.termux.shared.android.PermissionUtils;
 import com.termux.app.activities.EditorActivity;
+import com.termux.app.editor.EditorSessionManager;
 import java.io.File;
 import androidx.core.content.ContextCompat;
 
@@ -52,7 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 showMpvHome();
                 return true;
             } else if (id == R.id.nav_editor) {
-                showEditorHome();
+                EditorSessionManager.SessionState state = EditorSessionManager.load(this);
+                if (state != null && !state.tabs.isEmpty()) {
+                    startActivity(new Intent(this, EditorActivity.class));
+                } else {
+                    showEditorHome();
+                }
                 return true;
             } else if (id == R.id.nav_utilities) {
                 showPlaceholder("Utilities — coming soon");
