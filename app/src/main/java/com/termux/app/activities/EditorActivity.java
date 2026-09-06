@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.termux.R;
 import com.termux.app.editor.EditableSource;
 import com.termux.app.editor.TabState;
@@ -45,6 +48,8 @@ public class EditorActivity extends AppCompatActivity {
         tabStrip = findViewById(R.id.editor_tab_strip);
         filePathView = findViewById(R.id.editor_file_path);
         contentInput = findViewById(R.id.editor_content_input);
+        Toolbar toolbar = findViewById(R.id.editor_toolbar);
+        setSupportActionBar(toolbar);
 
         restoreSession();
         handleIncomingIntent(getIntent());
@@ -238,5 +243,92 @@ public class EditorActivity extends AppCompatActivity {
             }
         }
         EditorSessionManager.save(this, activeTabIndex, tabs);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_open_file) {
+            Toast.makeText(this, "Buka Berkas — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_open_folder) {
+            Toast.makeText(this, "Buka Folder — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_new_tab) {
+            Toast.makeText(this, "Tab Baru — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_save) {
+            Toast.makeText(this, "Simpan — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_save_as) {
+            Toast.makeText(this, "Simpan Sebagai — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_reload) {
+            Toast.makeText(this, "Muat Ulang — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_recent_files) {
+            Toast.makeText(this, "Berkas Terbaru — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_undo) {
+            Toast.makeText(this, "Undo — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_redo) {
+            Toast.makeText(this, "Redo — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_copy) {
+            Toast.makeText(this, "Salin — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_paste) {
+            Toast.makeText(this, "Tempel — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_find) {
+            Toast.makeText(this, "Cari — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_replace) {
+            Toast.makeText(this, "Ganti — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_replace_all) {
+            Toast.makeText(this, "Ganti Semua — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_insert_timestamp) {
+            Toast.makeText(this, "Masukkan Tanda Waktu — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_goto_line) {
+            Toast.makeText(this, "Pergi ke Baris — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_word_wrap) {
+            Toast.makeText(this, "Pembungkus Kata — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_read_only) {
+            Toast.makeText(this, "Hanya Baca — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_syntax) {
+            Toast.makeText(this, "Syntax — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_encoding) {
+            Toast.makeText(this, "Encode — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_run) {
+            Toast.makeText(this, "Lakukan — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_print) {
+            Toast.makeText(this, "Cetak — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_share) {
+            Toast.makeText(this, "Bagikan — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.action_statistics) {
+            Toast.makeText(this, "Statistik — segera hadir", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

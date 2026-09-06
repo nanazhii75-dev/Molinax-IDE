@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Berkas">
+        <menu>
+            <item android:id="@+id/action_open_file" android:title="Buka Berkas" />
+            <item android:id="@+id/action_open_folder" android:title="Buka Folder" />
+            <item android:id="@+id/action_new_tab" android:title="Tab Baru" />
+            <item android:id="@+id/action_save" android:title="Simpan" />
+            <item android:id="@+id/action_save_as" android:title="Simpan Sebagai" />
+            <item android:id="@+id/action_reload" android:title="Muat Ulang" />
+            <item android:id="@+id/action_recent_files" android:title="Berkas Terbaru" />
+        </menu>
+    </item>
+    <item android:title="Edit">
+        <menu>
+            <item android:id="@+id/action_undo" android:title="Undo" />
+            <item android:id="@+id/action_redo" android:title="Redo" />
+            <item android:id="@+id/action_copy" android:title="Salin" />
+            <item android:id="@+id/action_paste" android:title="Tempel" />
+            <item android:id="@+id/action_find" android:title="Cari" />
+            <item android:id="@+id/action_replace" android:title="Ganti" />
+            <item android:id="@+id/action_replace_all" android:title="Ganti Semua" />
+            <item android:id="@+id/action_insert_timestamp" android:title="Masukkan Tanda Waktu" />
+            <item android:id="@+id/action_goto_line" android:title="Pergi ke Baris" />
+        </menu>
+    </item>
+    <item android:title="Tampilan">
+        <menu>
+            <item android:id="@+id/action_word_wrap" android:title="Pembungkus Kata" android:checkable="true" />
+            <item android:id="@+id/action_read_only" android:title="Hanya Baca" android:checkable="true" />
+            <item android:id="@+id/action_syntax" android:title="Syntax" />
+            <item android:id="@+id/action_encoding" android:title="Encode" />
+        </menu>
+    </item>
+    <item android:title="Alat">
+        <menu>
+            <item android:id="@+id/action_run" android:title="Lakukan" />
+            <item android:id="@+id/action_print" android:title="Cetak" />
+            <item android:id="@+id/action_share" android:title="Bagikan" />
+            <item android:id="@+id/action_statistics" android:title="Statistik" />
+        </menu>
+    </item>
+</menu>
