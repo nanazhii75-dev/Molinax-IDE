@@ -23,6 +23,7 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
 
     private lateinit var documentTreeOpener: ActivityResultLauncher<Uri?>
     private lateinit var filePickerLauncher: ActivityResultLauncher<Intent>
+    private lateinit var routerLauncher: ActivityResultLauncher<Intent>
     private lateinit var playerLauncher: ActivityResultLauncher<Intent>
 
     private var firstRun = false
@@ -54,6 +55,14 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             }
             it.data?.getStringExtra("last_path")?.let { path ->
                 lastPath = path
+            }
+            it.data?.getStringExtra("path")?.let { path ->
+                routeFile(path)
+            }
+        }
+        routerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
             }
             it.data?.getStringExtra("path")?.let { path ->
                 playFile(path)
@@ -190,6 +199,13 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             "url" -> binding.urlBtn.callOnClick()
             "file" -> binding.filepickerBtn.callOnClick()
         }
+    }
+
+    private fun routeFile(path: String) {
+        val i = Intent("com.termux.app.ACTION_ROUTE_FILE")
+        i.setPackage(requireContext().packageName)
+        i.putExtra("path", path)
+        routerLauncher.launch(i)
     }
 
     private fun playFile(filepath: String) {

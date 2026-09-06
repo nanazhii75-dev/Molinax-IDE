@@ -108,6 +108,17 @@
             android:exported="false"
             android:label="@string/application_name"
             android:theme="@style/Theme.TermuxApp.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".app.activities.RouterActivity"
+            android:exported="false"
+            android:label="@string/application_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="com.termux.app.ACTION_ROUTE_FILE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".app.activities.SettingsActivity"
             android:exported="true"
