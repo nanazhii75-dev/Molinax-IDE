@@ -107,6 +107,7 @@ public class EditorActivity extends AppCompatActivity {
                 tab.source = EditableSource.from(this, entry.pathOrUri);
                 tab.content = tab.source.read();
                 tab.savedContent = tab.content;
+                tab.explicitSaveContent = tab.content;
                 tab.cursorLine = entry.cursorLine;
                 tabs.add(tab);
             } catch (Exception e) {
@@ -147,6 +148,7 @@ public class EditorActivity extends AppCompatActivity {
         try {
             tab.content = tab.source.read();
             tab.savedContent = tab.content;
+            tab.explicitSaveContent = tab.content;
         } catch (IOException e) {
             Toast.makeText(this, "Gagal baca file: " + e.getMessage(), Toast.LENGTH_LONG).show();
             return;
@@ -183,7 +185,7 @@ public class EditorActivity extends AppCompatActivity {
         if (activeTabIndex < 0 || activeTabIndex >= tabs.size()) return;
         TabState tab = tabs.get(activeTabIndex);
         tab.content = contentInput.getText().toString();
-        tab.isDirty = !tab.content.equals(tab.savedContent);
+        tab.isDirty = !tab.content.equals(tab.explicitSaveContent);
         try {
             tab.cursorLine = contentInput.getCursor().getLeftLine();
         } catch (Exception ignored) {
@@ -193,7 +195,7 @@ public class EditorActivity extends AppCompatActivity {
     private void updateDirtyIndicator() {
         if (activeTabIndex < 0 || activeTabIndex >= tabs.size()) return;
         TabState tab = tabs.get(activeTabIndex);
-        boolean dirtyNow = !contentInput.getText().toString().equals(tab.savedContent);
+        boolean dirtyNow = !contentInput.getText().toString().equals(tab.explicitSaveContent);
         if (dirtyNow != tab.isDirty) {
             tab.isDirty = dirtyNow;
             updateTabLabel(activeTabIndex);
@@ -289,11 +291,10 @@ public class EditorActivity extends AppCompatActivity {
         super.onPause();
         saveActiveTabState();
         for (TabState tab : tabs) {
-            if (tab.isDirty) {
+            if (!tab.content.equals(tab.savedContent)) {
                 try {
                     tab.source.write(tab.content);
                     tab.savedContent = tab.content;
-                    tab.isDirty = false;
                 } catch (IOException e) {
                     Toast.makeText(this, "Gagal simpan " + tab.getDisplayName() + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -313,7 +314,23 @@ public class EditorActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_open_file) {
+        if (id == R.id.action_save) {
+            saveActiveTabState();
+            if (activeTabIndex >= 0 && activeTabIndex < tabs.size()) {
+                TabState tab = tabs.get(activeTabIndex);
+                try {
+                    tab.source.write(tab.content);
+                    tab.savedContent = tab.content;
+                    tab.explicitSaveContent = tab.content;
+                    tab.isDirty = false;
+                    updateTabLabel(activeTabIndex);
+                    Toast.makeText(this, "Tersimpan", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Gagal simpan: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        else if (id == R.id.action_open_file) {
             Toast.makeText(this, "Buka Berkas — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_open_folder) {
@@ -321,9 +338,6 @@ public class EditorActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_new_tab) {
             Toast.makeText(this, "Tab Baru — segera hadir", Toast.LENGTH_SHORT).show();
-        }
-        else if (id == R.id.action_save) {
-            Toast.makeText(this, "Simpan — segera hadir", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.action_save_as) {
             Toast.makeText(this, "Simpan Sebagai — segera hadir", Toast.LENGTH_SHORT).show();
